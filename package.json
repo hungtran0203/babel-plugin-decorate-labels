@@ -1,0 +1,49 @@
+{
+  "name": "babel-plugin-decorate-labels",
+  "version": "1.0.0",
+  "description": "Bable plugin for label decorating.",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "babel --plugins @babel/plugin-syntax-flow,@babel/plugin-transform-flow-strip-types -d ./lib ./src",
+    "dev": "babel --watch --plugins @babel/plugin-syntax-flow,@babel/plugin-transform-flow-strip-types -d ./lib ./src",
+    "build-typed": "npm run build && babel --plugins ./lib,@babel/plugin-syntax-flow,@babel/plugin-transform-flow-strip-types -d ./lib-checked ./src",
+    "prepublish": "npm run build",
+    "pretest": "npm run build",
+    "test": "mocha ./test/index.js",
+    "test-checked": "npm run build-typed && CONTRACTS_USE_LIBCHECKED=1 mocha ./test/index.js",
+    "watch": "NODE_WATCH=1 mocha --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hungtran0203/babel-plugin-decorate-labels"
+  },
+  "keywords": [
+    "babel",
+    "babel-plugin",
+    "label",
+    "decorator",
+    "types",
+    "typing"
+  ],
+  "author": "Charles Pick <charles@codemix.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hungtran0203/babel-plugin-decorate-labels/issues"
+  },
+  "homepage": "https://github.com/hungtran0203/babel-plugin-decorate-labels",
+  "dependencies": {
+    "@babel/generator": "^7.4.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.3",
+    "@babel/core": "^7.4.3",
+    "@babel/plugin-proposal-class-properties": "^7.4.0",
+    "@babel/plugin-syntax-flow": "^7.2.0",
+    "@babel/plugin-transform-flow-strip-types": "^7.4.0",
+    "@babel/polyfill": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
+    "@babel/register": "^7.4.0",
+    "mocha": "~6.1.2",
+    "should": "^13.2.3"
+  }
+}
