@@ -2,46 +2,19 @@
 
 This is a [Babel](https://babeljs.io/) plugin for design by contract for JavaScript.
 
-[![Build Status](https://travis-ci.org/codemix/babel-plugin-contracts.svg)](https://travis-ci.org/codemix/babel-plugin-contracts)
-
 # What?
-
-[Design by contract](https://en.wikipedia.org/wiki/Design_by_contract) is a very powerful technique for writing robust software, it can be thought of as a formal but convenient method for specifying assertions. Instead of the developer documenting their assumptions in comments, or worse, not documenting them at all, Design by Contract gives them a way to express their assumptions in a convenient syntax, and have those assumptions validated at runtime.
-
-Contracts come in three flavours:
-
-- **[preconditions](http://en.wikipedia.org/wiki/Precondition)** which run at the start of a function.
-- **[postconditions](http://en.wikipedia.org/wiki/Postcondition)** which run at the end of a function.
-- **[invariants](http://en.wikipedia.org/wiki/Invariant_\(computer_science\))** which run at both the start and end of a *block*.
-
-Each statement in a contract must evaluate to true for the contract to be valid. If a contract fails, an error will be thrown.
-
-Preconditions are usually used to validate the arguments to a function, or the state of the system before the main function body executes.
-
-Postconditions are used to validate the result or side effects of the function.
-
-Invariants are used to ensure that an assumption holds true for the duration of the function.
-
-Although not strictly a contract, **[assertions](https://en.wikipedia.org/wiki/Assertion_\(software_development\))** are also supported.
-
-Neither invariants, assertions, preconditions or postconditions themselves may have side-effects, e.g. it is not possible to assign a new value to a variable from within a contract.
-
-> Purity within contracts is enforced as much as possible by the plugin, but it is still possible for a programmer to circumvent, by calling an impure function from within the precondition or postcondition. **This is strongly discouraged.**
-
-This plugin implements Design by Contract by ~~abusing~~ repurposing JavaScript labels. Labels are a very rarely used feature of JavaScript, and a nice thing about them is that if a label is specified but not used, it is simply ignored by the JavaScript engine.
-This allows us to break up our function body into labeled sections, without affecting the result or behavior of the function. The plugin then retrieves these special labeled sections and transpiles them into contracts.
 
 # Installation
 
-Install via [npm](https://npmjs.org/package/babel-plugin-contracts).
+Install via [npm](https://npmjs.org/package/babel-plugin-label-decorator).
 ```sh
-npm install --save-dev babel-plugin-contracts
+npm install --save-dev babel-plugin-label-decorator
 ```
-Then, in your babel configuration (usually in your `.babelrc` file), add `"contracts"` to your list of plugins:
+Then, in your babel configuration (usually in your `.babelrc` file), add `"label-decorator"` to your list of plugins:
 ```json
 {
   "plugins": [
-    ["contracts", {
+    ["label-decorator", {
       "env": {
         "production": {
           "strip": true
@@ -52,13 +25,13 @@ Then, in your babel configuration (usually in your `.babelrc` file), add `"contr
 }
 ```
 
-The above example configuration will remove all contracts when `NODE_ENV=production`, which is often preferable for performance reasons.
+The above example configuration will remove all label-decorator when `NODE_ENV=production`, which is often preferable for performance reasons.
 You can customize the names of the labels and identifiers by specifying a `names` option, e.g.
 
 ```json
 {
   "plugins": [
-    ["contracts", {
+    ["label-decorator", {
       "names": {
         "assert": "assert",
         "precondition": "pre",
@@ -220,18 +193,7 @@ You can customize the names of the labels and identifiers by specifying a `names
 
   Now if a contract fails, the error object will have a descriptive message.
 
-# Migrating from Contractual.
-This plugin uses a very similar syntax to our earlier Design by Contract library, [contractual](https://github.com/codemix/contractual).
-If you're migrating your project there are some differences to be aware of:
-
-1. There is no longer a `main:` section. Anything outside of a contract is considered to be part of the normal program code.
-2. Contracts containing more than one assertion **must** be fully wrapped in a block statement (`{` and `}`), labels no longer act as delimiters.
-3. `__result` is now called `it` in postconditions.
-4. Invariants can be specified at the block / scope level, not just at function entry points.
-5. No longer creates custom error types.
-
-
 # License
 
-Published by [codemix](http://codemix.com/) under a permissive MIT License, see [LICENSE.md](./LICENSE.md).
+Published under a permissive MIT License, see [LICENSE.md](./LICENSE.md).
 
